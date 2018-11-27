@@ -1,6 +1,6 @@
 {
   "name": "nock-chai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Extends Chai with assertions for the Nock Http mocking framework",
   "main": "lib/index.js",
   "scripts": {
@@ -34,6 +34,7 @@
     "request-promise-native": "^1.0.5"
   },
   "dependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "deep-equal": "^1.0.1"
   }
 }

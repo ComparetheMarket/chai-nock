@@ -15,7 +15,7 @@ nockedRequest.on('request', function(req, interceptor, body) {
 you can write code that expresses what you really mean:
 
 ```javascript
-return expect(nock('http://some-url')).to.have.been.requested;
+return expect(nock('http://some-url')).to.have.been.requestedWith('foo');
 ```
 
 
@@ -37,6 +37,12 @@ chai.use(chaiNock);
 ```javascript
 expect(nock).to.have.been.requested;
 expect(nock).not.to.have.been.requested;
+```
+
+#### requestedWith(value)
+```javascript
+expect(nock).to.have.been.requestedWith(value)
+expect(nock).not.to.have.been.requestedWith(value)
 ```
 
 ## Examples
