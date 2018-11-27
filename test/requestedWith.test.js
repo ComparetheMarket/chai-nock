@@ -124,7 +124,6 @@ describe('requestedWith() assertions', () => {
         const mockArgument = {
           test: 12345,
         };
-
         const requestNock = nock(TEST_URL).get('/').reply(200);
         request({
           json: true,
@@ -135,11 +134,11 @@ describe('requestedWith() assertions', () => {
         const assertion = expect(requestNock).not.to.have.been.requestedWith(mockArgument);
 
         return assertion
-        .then(() => done.fail('Should have thrown an error'))
-        .catch((err) => {
-          expect(err.message).to.equal('expected Nock to have not been requested with { test: 12345 }');
-          done();
-        });
+          .then(() => done.fail('Should have thrown an error'))
+          .catch((err) => {
+            expect(err.message).to.equal('expected Nock to have not been requested with { test: 12345 }');
+            done();
+          });
       });
     });
   });

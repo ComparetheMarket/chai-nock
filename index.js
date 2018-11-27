@@ -1,4 +1,5 @@
 "use strict";
+
 const equal = require('deep-equal');
 
 module.exports = (chai) => {
@@ -26,7 +27,7 @@ module.exports = (chai) => {
         resolve(body);
       });
 
-      nock.once('error', err => {
+      nock.on('error', err => {
         clearTimeout(timeout);
         reject(err);
       });

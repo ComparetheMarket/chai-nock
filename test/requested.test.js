@@ -52,6 +52,23 @@ describe('requested assertions', () => {
           });
       });
     });
+
+    describe('when a there is an error in the nock', () => {
+      it('throws', (done) => {
+        const requestNock = nock(TEST_URL).get('/').reply(200);
+
+        const assertion = expect(requestNock).to.have.been.requested;
+
+        requestNock.emit('error', new Error('A problem with Nock'))
+
+        return assertion
+          .then(() => done.fail('Should have thrown an error'))
+          .catch((err) => {
+            expect(err.message).to.equal('expected Nock to have been requested');
+            done();
+          });
+      });
+    });
   });
 
   describe('.not.requested', () => {
