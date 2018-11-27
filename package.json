@@ -1,8 +1,8 @@
 {
-  "name": "nock-chai",
+  "name": "chai-nock",
   "version": "0.2.0",
   "description": "Extends Chai with assertions for the Nock Http mocking framework",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest test",
     "style": "eslint ."
@@ -18,14 +18,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ComparetheMarket/nock-chai.git"
+    "url": "git+https://github.com/ComparetheMarket/chai-nock.git"
   },
   "author": "Chris Andrews, Ben Vaughan-Jones",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ComparetheMarket/nock-chai/issues"
+    "url": "https://github.com/ComparetheMarket/chai-nock/issues"
   },
-  "homepage": "https://github.com/ComparetheMarket/nock-chai#readme",
+  "homepage": "https://github.com/ComparetheMarket/chai-nock#readme",
   "devDependencies": {
     "eslint": "^5.9.0",
     "jest": "^23.6.0",

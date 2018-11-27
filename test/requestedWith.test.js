@@ -2,15 +2,11 @@ const { expect, use} = require('chai');
 const nock = require('nock');
 const request = require('request-promise-native');
 
-const nockChai = require('../lib/nock-chai');
-use(nockChai);
+const chaiNock = require('../');
+use(chaiNock);
 
 describe('requestedWith() assertions', () => {
   const TEST_URL = 'http://someurl.com';
-  const mockArgument = {
-    test: 12345,
-    value: 6789,
-  };
 
   afterEach(() => {
     nock.cleanAll();
@@ -36,8 +32,12 @@ describe('requestedWith() assertions', () => {
     describe('when a request to the nock has been made with the correct argument', () => {
       describe('with a simple argument', () => {
         it('passes', () => {
-          const requestNock = nock(TEST_URL).get('/').reply(200, 'test');
-          request(TEST_URL);
+          const requestNock = nock(TEST_URL).get('/').reply(200);
+          request({
+            json: true,
+            uri: TEST_URL,
+            body: 'test'
+          });
   
           return expect(requestNock).to.have.been.requestedWith('test');
         });
@@ -45,25 +45,37 @@ describe('requestedWith() assertions', () => {
 
       describe('with an Object as an argument', () => {
         it('passes', () => {
-          const requestNock = nock(TEST_URL).get('/').reply(200, mockArgument);
-          request(TEST_URL);
+          const requestNock = nock(TEST_URL).get('/').reply(200);
+          request({
+            json: true,
+            uri: TEST_URL,
+            body: {
+              test: 123,
+            }
+          });
   
-          return expect(requestNock).to.have.been.requestedWith(mockArgument);
+          return expect(requestNock).to.have.been.requestedWith({
+            test: 123,
+          });
         });
       });
     });
 
     describe('when a request to the nock has been made but with incorrect arguments', () => {
       it('throws', (done) => {
-        const requestNock = nock(TEST_URL).get('/').reply(200, { test: 1 });
-        request(TEST_URL);
+        const requestNock = nock(TEST_URL).get('/').reply(200);
+        request({
+          json: true,
+          uri: TEST_URL,
+          body: { test: 1 }
+        });
 
-        const assertion = expect(requestNock).to.have.been.requestedWith(mockArgument);
+        const assertion = expect(requestNock).to.have.been.requestedWith({ test: 2 });
 
         return assertion
         .then(() => done.fail('Should have thrown an error'))
         .catch((err) => {
-          expect(err.message).to.equal('expected Nock to have been requested with { test: 12345, value: 6789 }, but was requested with { test: 1 }');
+          expect(err.message).to.equal('expected Nock to have been requested with { test: 2 }, but was requested with { test: 1 }');
           done();
         });
       });
@@ -73,7 +85,7 @@ describe('requestedWith() assertions', () => {
       it('throws', (done) => {
         const requestNock = nock(TEST_URL).get('/').reply(200);
 
-        const assertion = expect(requestNock).to.have.been.requestedWith(mockArgument);
+        const assertion = expect(requestNock).to.have.been.requestedWith({ test: 123 });
 
         return assertion
           .then(() => done.fail('Should have thrown an error'))
@@ -88,8 +100,12 @@ describe('requestedWith() assertions', () => {
   describe('.not.requestedWith()', () => {
     describe('when a request to the nock has been made with the incorrect arguments', () => {
       it('passes', () => {
-        const requestNock = nock(TEST_URL).get('/').reply(200, mockArgument);
-        request(TEST_URL);
+        const requestNock = nock(TEST_URL).get('/').reply(200);
+        request({
+          json: true,
+          uri: TEST_URL,
+          body: { test: 123 }
+        });
 
         return expect(requestNock).not.to.have.been.requestedWith('different_value');
       });
@@ -105,15 +121,23 @@ describe('requestedWith() assertions', () => {
 
     describe('when a request to the nock has been made with matching arguments', () => {
       it('throws', (done) => {
-        const requestNock = nock(TEST_URL).get('/').reply(200, mockArgument);
-        request(TEST_URL);
+        const mockArgument = {
+          test: 12345,
+        };
+
+        const requestNock = nock(TEST_URL).get('/').reply(200);
+        request({
+          json: true,
+          uri: TEST_URL,
+          body: mockArgument
+        });
 
         const assertion = expect(requestNock).not.to.have.been.requestedWith(mockArgument);
 
         return assertion
         .then(() => done.fail('Should have thrown an error'))
         .catch((err) => {
-          expect(err.message).to.equal('expected Nock to have not been requested with { test: 12345, value: 6789 }');
+          expect(err.message).to.equal('expected Nock to have not been requested with { test: 12345 }');
           done();
         });
       });

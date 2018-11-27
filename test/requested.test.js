@@ -2,10 +2,10 @@ const { expect, use} = require('chai');
 const nock = require('nock');
 const request = require('request-promise-native');
 
-const nockChai = require('../lib/nock-chai');
-use(nockChai);
+const chaiNock = require('../');
+use(chaiNock);
 
-describe('Requested assertions', () => {
+describe('requested assertions', () => {
   const TEST_URL = 'http://someurl.com';
 
   afterEach(() => {

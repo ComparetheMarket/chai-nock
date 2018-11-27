@@ -7,17 +7,23 @@ module.exports = (chai) => {
 
   function promisfyNockInterceptor(nock) {
     return new Promise((resolve, reject) => {
+      let body;
+
       const timeout = setTimeout(() => {
         reject(new Error('The request has not been recieved by Nock'));
       }, MAX_TIMEOUT);
 
-      nock.once('replied', (req, interceptor) => {
-        clearTimeout(timeout);
+      nock.once('request', (req, interceptor, reqBody) => {
         try {
-          resolve(JSON.parse(interceptor.body));
+          body = JSON.parse(reqBody);
         } catch (err) {
-          resolve(interceptor.body);
+          body = reqBody;
         }
+      });
+
+      nock.once('replied', () => {
+        clearTimeout(timeout);
+        resolve(body);
       });
 
       nock.once('error', err => {
@@ -54,14 +60,11 @@ module.exports = (chai) => {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj)
-      .then(
-        (requestBody) => {
-          if (equal(requestBody, arg)) {
-            return this.assert(true, null, 'expected Nock to have not been requested with #{exp}', arg);
-          }
-          return this.assert(false, 'expected Nock to have been requested with #{exp}, but was requested with #{act}', 'expected Nock to have not been requested with #{exp}', arg, requestBody);
-        },
-          () => this.assert(false, 'expected Nock to have been requested, but it was never called')
-        );
+      .then((nockRequest) => {
+        if (equal(nockRequest, arg)) {
+          return this.assert(true, null, 'expected Nock to have not been requested with #{exp}', arg);
+        }
+        return this.assert(false, 'expected Nock to have been requested with #{exp}, but was requested with #{act}', 'expected Nock to have not been requested with #{exp}', arg, nockRequest);
+      },() => this.assert(false, 'expected Nock to have been requested, but it was never called'));
   });
 };
