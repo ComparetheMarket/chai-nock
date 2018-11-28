@@ -1,6 +1,8 @@
 # Chai Assertions for Nock
 
-**Nock Chai** extends [Chai](http://chaijs.com/) with an language for asserting facts about [Nock](https://www.npmjs.com/package/nock).
+![Test Coverage](https://img.shields.io/npm/v/chai-nock.svg?style=flat)
+
+**Nock Chai** extends [Chai](http://chaijs.com/) with a language for asserting facts about [Nock](https://www.npmjs.com/package/nock).
 
 Instead of manually wiring up your expectations to intercepting a nocked request:
 
@@ -8,14 +10,14 @@ Instead of manually wiring up your expectations to intercepting a nocked request
 const nockedRequest = nock('http://some-url');
 
 nockedRequest.on('request', function(req, interceptor, body) {
-  expect(body).to.equal('foo');
+  expect(body).to.deep.equal({ hello: 'world' });
 });
 ```
 
 you can write code that expresses what you really mean:
 
 ```javascript
-return expect(nock('http://some-url')).to.have.been.requestedWith('foo');
+return expect(nock('http://some-url')).to.have.been.requestedWith({ hello: 'world' });
 ```
 
 
@@ -39,10 +41,10 @@ expect(nock).to.have.been.requested;
 expect(nock).not.to.have.been.requested;
 ```
 
-#### requestedWith(value)
+#### requestedWith(body)
 ```javascript
-expect(nock).to.have.been.requestedWith(value)
-expect(nock).not.to.have.been.requestedWith(value)
+expect(nock).to.have.been.requestedWith(body)
+expect(nock).not.to.have.been.requestedWith(body)
 ```
 
 ## Examples
@@ -54,15 +56,21 @@ const { expect } = require('chai');
 const nock = require('nock');
 const request = require('request-promise-native');
 
-describe('bbc.co.uk', () => {
-  it('should make a request to the bbc.co.uk', function() {
+describe('example', () => {
+  it('should make a request to bbc.co.uk', function() {
     const requestNock = nock('http://bbc.co.uk')
       .get('/')
       .reply(200);
 
-    request('http://bbc.co.uk');
+    request({
+      json: true,
+      uri: 'http://bbc.co.uk',
+      body: {
+        hello: 'world'
+      }
+    });
 
-    return expect(requestNock).to.have.been.requested;
+    return expect(requestNock).to.have.been.requestedWith({ hello: 'world' });
   });
 });
 ```
