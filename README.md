@@ -55,7 +55,7 @@ const nock = require('nock');
 const request = require('request-promise-native');
 
 describe('bbc.co.uk', () => {
-  it('should make a request to the bbc.co.uk', function() {
+  it('should make a request to bbc.co.uk', function() {
     const requestNock = nock('http://bbc.co.uk')
       .get('/')
       .reply(200);
