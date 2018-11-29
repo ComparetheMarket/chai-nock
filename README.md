@@ -1,6 +1,6 @@
 # Chai Assertions for Nock
 
-![Test Coverage](https://img.shields.io/npm/v/chai-nock.svg?style=flat)
+[![npm version](https://img.shields.io/npm/v/chai-nock.svg?style=flat)](https://www.npmjs.com/package/chai-nock)
 
 **Nock Chai** extends [Chai](http://chaijs.com/) with a language for asserting facts about [Nock](https://www.npmjs.com/package/nock).
 
