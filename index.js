@@ -120,4 +120,34 @@ module.exports = chai => {
         )
     );
   });
+
+  Assertion.addMethod("requestedWithHeaders", function(arg) {
+    isNock(this._obj);
+
+    return promisfyNockInterceptor(this._obj).then(
+      ({ headers }) => {
+        const mergedHeaders = Object.assign(headers, arg);
+        if (equal(headers, mergedHeaders)) {
+          return this.assert(
+            true,
+            null,
+            "expected Nock to have not been requested with headers #{exp}",
+            arg
+          );
+        }
+        return this.assert(
+          false,
+          "expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}",
+          "expected Nock to have not been requested with #{exp}",
+          arg,
+          headers
+        );
+      },
+      () =>
+        this.assert(
+          false,
+          "expected Nock to have been requested, but it was never called"
+        )
+    );
+  });
 };
