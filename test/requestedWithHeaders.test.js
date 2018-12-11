@@ -66,12 +66,12 @@ describe("requestedWithHeaders() assertions", () => {
               .get("/")
               .reply(200);
             request(requestObj);
-    
+            
             const assertion = expect(
               requestNock
             ).to.have.been.requestedWithHeaders({ wrongKey: 789 });
-            const actualHeaders = "{ Object (test, host, ...) }"; // Chai truncates the object to this string
-    
+            const actualHeaders = "{ Object (test, test2, ...) }"; // Chai truncates the object to this string
+         
             return assertion
               .then(() => done.fail("Should have thrown an error"))
               .catch(err => {
@@ -92,7 +92,7 @@ describe("requestedWithHeaders() assertions", () => {
             const assertion = expect(
               requestNock
             ).to.have.been.requestedWithHeaders({ wrongKey: 789, test: 123 });
-            const actualHeaders = "{ Object (test, host, ...) }"; // Chai truncates the object to this string
+            const actualHeaders = "{ Object (test, test2, ...) }"; // Chai truncates the object to this string
     
             return assertion
               .then(() => done.fail("Should have thrown an error"))
@@ -167,13 +167,12 @@ describe("requestedWithHeaders() assertions", () => {
         ).not.to.have.been.requestedWithHeaders({
           test: 123
         });
-        const headersString = "{ Object (test, host, ...) }"; // Chai truncates the object to this string
 
         return assertion
           .then(() => done.fail("Should have thrown an error"))
           .catch(err => {
             expect(err.message).to.equal(
-              `expected Nock to have not been requested with headers ${headersString}`
+              'expected Nock to have not been requested with headers { test: 123 }'
             );
             done();
           });
