@@ -47,6 +47,18 @@ expect(nock).to.have.been.requestedWith(body)
 expect(nock).not.to.have.been.requestedWith(body)
 ```
 
+#### requestedWithExactHeaders(header)
+```javascript
+expect(nock).to.have.been.requestedWithExactHeaders(header)
+expect(nock).not.to.have.been.requestedWithExactHeaders(header)
+```
+
+#### requestedWithHeaders(header)
+```javascript
+expect(nock).to.have.been.requestedWithHeaders(header)
+expect(nock).not.to.have.been.requestedWithHeaders(header)
+```
+
 ## Examples
 
 Using Chai's `expect`:
@@ -71,6 +83,65 @@ describe('example', () => {
     });
 
     return expect(requestNock).to.have.been.requestedWith({ hello: 'world' });
+  });
+});
+```
+
+```javascript
+const { expect } = require('chai');
+const nock = require('nock');
+const request = require('request-promise-native');
+
+describe('example', () => {
+  it('should make a request to bbc.co.uk with the exact same headers as specified', function() {
+    const requestNock = nock('http://bbc.co.uk')
+      .get('/')
+      .reply(200);
+
+    request({
+      json: true,
+      uri: 'http://bbc.co.uk',
+      headers: {
+        test: 123,
+      }
+      body: {
+        hello: 'world'
+      }
+    });
+   //does it ignore the body?
+    return expect(requestNock).to.have.been.requestedWithExactHeaders({ json: true,
+      uri: 'http://bbc.co.uk',
+      headers: {
+        test: 123,
+      } 
+    });
+  });
+});
+```
+
+```javascript
+const { expect } = require('chai');
+const nock = require('nock');
+const request = require('request-promise-native');
+
+describe('example', () => {
+  it('should make a request to bbc.co.uk with the exact same headers as specified', function() {
+    const requestNock = nock('http://bbc.co.uk')
+      .get('/')
+      .reply(200);
+
+    request({
+      json: true,
+      uri: 'http://bbc.co.uk',
+      headers: {
+        test: 123,
+      }
+      body: {
+        hello: 'world'
+      }
+    });
+
+    return expect(requestNock).to.have.been.requestedWithHeaders({ test: 123 });
   });
 });
 ```
