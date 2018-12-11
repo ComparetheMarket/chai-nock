@@ -92,7 +92,7 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod("requestedWithHeaders", function(arg) {
+  Assertion.addMethod("requestedWithExactHeaders", function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(

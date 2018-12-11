@@ -5,7 +5,7 @@ const request = require("request-promise-native");
 const chaiNock = require("..");
 use(chaiNock);
 
-describe("requestedWithHeaders() assertions", () => {
+describe("requestedWithExactHeaders() assertions", () => {
   const TEST_URL = "http://someurl.com";
 
   const requestObj = {
@@ -23,22 +23,22 @@ describe("requestedWithHeaders() assertions", () => {
   describe("when asserting on a type that is not a Nock", () => {
     it("throws a type error", () => {
       expect(() =>
-        expect("NOT_A_NOCK").to.have.been.requestedWithHeaders()
+        expect("NOT_A_NOCK").to.have.been.requestedWithExactHeaders()
       ).to.throw(TypeError);
 
       expect(() =>
-        expect({}).to.have.been.requestedWithHeaders()
+        expect({}).to.have.been.requestedWithExactHeaders()
       ).to.throw(TypeError);
 
       expect(() =>
         expect(
           nock("http://url-without.a").get("/interceptor")
-        ).to.have.been.requestedWithHeaders()
+        ).to.have.been.requestedWithExactHeaders()
       ).to.throw(TypeError);
     });
   });
   
-  describe(".requestedWithHeaders()", () => {
+  describe(".requestedWithExactHeaders()", () => {
 
     describe("when a request to the nock has been made with the correct argument", () => {
       describe("with an Object as an argument", () => {
@@ -48,7 +48,7 @@ describe("requestedWithHeaders() assertions", () => {
             .reply(200);
           request(requestObj);
 
-          return expect(requestNock).to.have.been.requestedWithHeaders({
+          return expect(requestNock).to.have.been.requestedWithExactHeaders({
             test: 123,
             host: "someurl.com",
             accept: "application/json"
@@ -66,7 +66,7 @@ describe("requestedWithHeaders() assertions", () => {
 
         const assertion = expect(
           requestNock
-        ).to.have.been.requestedWithHeaders({ test: 2 });
+        ).to.have.been.requestedWithExactHeaders({ test: 2 });
         const actualHeaders = "{ Object (test, host, ...) }"; // Chai truncates the object to this string
 
         return assertion
@@ -88,7 +88,7 @@ describe("requestedWithHeaders() assertions", () => {
 
         const assertion = expect(
           requestNock
-        ).to.have.been.requestedWithHeaders({ test: 123 });
+        ).to.have.been.requestedWithExactHeaders({ test: 123 });
 
         return assertion
           .then(() => done.fail("Should have thrown an error"))
@@ -102,7 +102,7 @@ describe("requestedWithHeaders() assertions", () => {
     });
   });
 
-  describe(".not.requestedWithHeaders()", () => {
+  describe(".not.requestedWithExactHeaders()", () => {
     describe("when a request to the nock has been made with the incorrect arguments", () => {
       it("passes", () => {
         const requestNock = nock(TEST_URL)
@@ -110,7 +110,7 @@ describe("requestedWithHeaders() assertions", () => {
           .reply(200);
         request(requestObj);
 
-        return expect(requestNock).not.to.have.been.requestedWithHeaders(
+        return expect(requestNock).not.to.have.been.requestedWithExactHeaders(
           "different_value"
         );
       });
@@ -122,7 +122,7 @@ describe("requestedWithHeaders() assertions", () => {
           .get("/")
           .reply(200);
 
-        return expect(requestNock).not.to.have.been.requestedWithHeaders(
+        return expect(requestNock).not.to.have.been.requestedWithExactHeaders(
           "different_value"
         );
       });
@@ -137,7 +137,7 @@ describe("requestedWithHeaders() assertions", () => {
 
         const assertion = expect(
           requestNock
-        ).not.to.have.been.requestedWithHeaders({
+        ).not.to.have.been.requestedWithExactHeaders({
           test: 123,
           host: "someurl.com",
           accept: "application/json"
