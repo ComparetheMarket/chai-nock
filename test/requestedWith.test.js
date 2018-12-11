@@ -1,6 +1,10 @@
-const { expect, use} = require('chai');
+
+const chai = require('chai');
 const nock = require('nock');
 const request = require('request-promise-native');
+
+chai.config.truncateThreshold = 0;
+const { expect, use} = chai;
 
 const chaiNock = require('../');
 use(chaiNock);
