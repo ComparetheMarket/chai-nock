@@ -42,8 +42,7 @@ describe("requestedWithHeaders() assertions", () => {
   describe(".requestedWithHeaders()", () => {
 
     describe("when a request to the nock has been made with the correct argument", () => {
-      describe("with an Object as an argument", () => {
-        describe("when the object fuzzy matches the request headers", () => {
+        describe("when the argument object fuzzy matches the request headers", () => {
           it("passes", () => {
             const requestNock = nock(TEST_URL)
               .get("/")
@@ -55,7 +54,22 @@ describe("requestedWithHeaders() assertions", () => {
             });
           });
         });
-      });
+
+        describe("when the argument object exactly matches the request headers", () => {
+          it("passes", () => {
+            const requestNock = nock(TEST_URL)
+              .get("/")
+              .reply(200);
+            request(requestObj);
+  
+            return expect(requestNock).to.have.been.requestedWithHeaders({
+              test: 123,
+              test2: 456,
+              host: "someurl.com",
+              accept: "application/json"
+            });
+          });
+        });
     });
 
     describe("when a request to the nock has been made but with incorrect arguments", () => {
