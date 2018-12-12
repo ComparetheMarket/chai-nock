@@ -73,7 +73,7 @@ describe("requestedWithExactHeaders() assertions", () => {
           .then(() => done.fail("Should have thrown an error"))
           .catch(err => {
             expect(err.message).to.contain(
-              `expected Nock to have been requested with headers { test: 2 }, but was requested with headers ${actualHeaders}`
+              `expected Nock to have been requested with exact headers { test: 2 }, but was requested with headers ${actualHeaders}`
             );
             done();
           });
@@ -148,7 +148,7 @@ describe("requestedWithExactHeaders() assertions", () => {
           .then(() => done.fail("Should have thrown an error"))
           .catch(err => {
             expect(err.message).to.equal(
-              `expected Nock to have not been requested with headers ${headersString}`
+              `expected Nock to have not been requested with exact headers ${headersString}`
             );
             done();
           });

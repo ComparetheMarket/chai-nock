@@ -101,14 +101,14 @@ module.exports = chai => {
           return this.assert(
             true,
             null,
-            "expected Nock to have not been requested with headers #{exp}",
+            "expected Nock to have not been requested with exact headers #{exp}",
             arg
           );
         }
         return this.assert(
           false,
-          "expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}",
-          "expected Nock to have not been requested with #{exp}",
+          "expected Nock to have been requested with exact headers #{exp}, but was requested with headers #{act}",
+          "expected Nock to have not been requested with exact headers #{exp}",
           arg,
           headers
         );

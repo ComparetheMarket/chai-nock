@@ -70,6 +70,7 @@ describe("requestedWithHeaders() assertions", () => {
             const assertion = expect(
               requestNock
             ).to.have.been.requestedWithHeaders({ wrongKey: 789 });
+
             const actualHeaders = "{ Object (test, test2, ...) }"; // Chai truncates the object to this string
          
             return assertion
@@ -82,6 +83,7 @@ describe("requestedWithHeaders() assertions", () => {
               });
           });
         });
+
         describe("when only one of the key/value pairs in the object is in the request headers", () => {
           it("throws", done => {
             const requestNock = nock(TEST_URL)
@@ -92,6 +94,7 @@ describe("requestedWithHeaders() assertions", () => {
             const assertion = expect(
               requestNock
             ).to.have.been.requestedWithHeaders({ wrongKey: 789, test: 123 });
+            
             const actualHeaders = "{ Object (test, test2, ...) }"; // Chai truncates the object to this string
     
             return assertion
