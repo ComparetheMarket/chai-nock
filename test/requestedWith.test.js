@@ -1,39 +1,45 @@
-const { expect, use } = require('chai');
-const nock = require('nock');
-const request = require('request-promise-native');
+/* eslint-disable no-unused-expressions */
 
-const chaiNock = require('../');
+var chai = require('chai');
+var expect = chai.expect;
+var use = chai.use;
+var nock = require('nock');
+var request = require('request-promise-native');
+
+var chaiNock = require('../');
 
 use(chaiNock);
 
-describe('requestedWith() assertions', () => {
-  const TEST_URL = 'http://someurl.com';
+describe('requestedWith() assertions', function() {
+  var TEST_URL = 'http://someurl.com';
 
-  afterEach(() => {
+  afterEach(function() {
     nock.cleanAll();
   });
 
-  describe('when asserting on a type that is not a Nock', () => {
-    it('throws a type error', () => {
-      expect(() => expect('NOT_A_NOCK').to.have.been.requestedWith()).to.throw(
-        TypeError,
-      );
+  describe('when asserting on a type that is not a Nock', function() {
+    it('throws a type error', function() {
+      expect(function() {
+        expect('NOT_A_NOCK').to.have.been.requestedWith();
+      }).to.throw(TypeError);
 
-      expect(() => expect({}).to.have.been.requestedWith()).to.throw(TypeError);
+      expect(function() {
+        expect({}).to.have.been.requestedWith();
+      }).to.throw(TypeError);
 
-      expect(() =>
+      expect(function() {
         expect(
-          nock('http://url-without.a').get('/interceptor'),
-        ).to.have.been.requestedWith(),
-      ).to.throw(TypeError);
+          nock('http://url-without.a').get('/interceptor')
+        ).to.have.been.requestedWith();
+      }).to.throw(TypeError);
     });
   });
 
-  describe('.requestedWith()', () => {
-    describe('when a request to the nock has been made with the correct argument', () => {
-      describe('with a simple argument', () => {
-        it('passes', () => {
-          const requestNock = nock(TEST_URL)
+  describe('.requestedWith()', function() {
+    describe('when a request to the nock has been made with the correct argument', function() {
+      describe('with a simple argument', function() {
+        it('passes', function() {
+          var requestNock = nock(TEST_URL)
             .get('/')
             .reply(200);
           request({
@@ -46,9 +52,9 @@ describe('requestedWith() assertions', () => {
         });
       });
 
-      describe('with an Object as an argument', () => {
-        it('passes', () => {
-          const requestNock = nock(TEST_URL)
+      describe('with an Object as an argument', function() {
+        it('passes', function() {
+          var requestNock = nock(TEST_URL)
             .get('/')
             .reply(200);
           request({
@@ -66,9 +72,10 @@ describe('requestedWith() assertions', () => {
       });
     });
 
-    describe('when a request to the nock has been made but with incorrect arguments', () => {
-      it('throws', done => {
-        const requestNock = nock(TEST_URL)
+    describe('when a request to the nock has been made but with incorrect arguments', function() {
+      it('throws', function(done) {
+        var assertion;
+        var requestNock = nock(TEST_URL)
           .get('/')
           .reply(200);
         request({
@@ -77,36 +84,40 @@ describe('requestedWith() assertions', () => {
           body: { test: 1 },
         });
 
-        const assertion = expect(requestNock).to.have.been.requestedWith({
+        assertion = expect(requestNock).to.have.been.requestedWith({
           test: 2,
         });
 
         return assertion
-          .then(() => done.fail('Should have thrown an error'))
-          .catch(err => {
+          .then(function() {
+            done.fail('Should have thrown an error');
+          })
+          .catch(function(err) {
             expect(err.message).to.equal(
-              'expected Nock to have been requested with { test: 2 }, but was requested with { test: 1 }',
+              'expected Nock to have been requested with { test: 2 }, but was requested with { test: 1 }'
             );
             done();
           });
       });
     });
 
-    describe('when a request to the nock has not been made', () => {
-      it('throws', done => {
-        const requestNock = nock(TEST_URL)
+    describe('when a request to the nock has not been made', function() {
+      it('throws', function(done) {
+        var requestNock = nock(TEST_URL)
           .get('/')
           .reply(200);
 
-        const assertion = expect(requestNock).to.have.been.requestedWith({
+        var assertion = expect(requestNock).to.have.been.requestedWith({
           test: 123,
         });
 
         return assertion
-          .then(() => done.fail('Should have thrown an error'))
-          .catch(err => {
+          .then(function() {
+            done.fail('Should have thrown an error');
+          })
+          .catch(function(err) {
             expect(err.message).to.equal(
-              'expected Nock to have been requested, but it was never called',
+              'expected Nock to have been requested, but it was never called'
             );
             done();
           });
@@ -114,10 +125,10 @@ describe('requestedWith() assertions', () => {
     });
   });
 
-  describe('.not.requestedWith()', () => {
-    describe('when a request to the nock has been made with the incorrect arguments', () => {
-      it('passes', () => {
-        const requestNock = nock(TEST_URL)
+  describe('.not.requestedWith()', function() {
+    describe('when a request to the nock has been made with the incorrect arguments', function() {
+      it('passes', function() {
+        var requestNock = nock(TEST_URL)
           .get('/')
           .reply(200);
         request({
@@ -127,29 +138,30 @@ describe('requestedWith() assertions', () => {
         });
 
         return expect(requestNock).not.to.have.been.requestedWith(
-          'different_value',
+          'different_value'
         );
       });
     });
 
-    describe('when a request to the nock has not been made', () => {
-      it('passes', () => {
-        const requestNock = nock(TEST_URL)
+    describe('when a request to the nock has not been made', function() {
+      it('passes', function() {
+        var requestNock = nock(TEST_URL)
           .get('/')
           .reply(200);
 
         return expect(requestNock).not.to.have.been.requestedWith(
-          'different_value',
+          'different_value'
         );
       });
     });
 
-    describe('when a request to the nock has been made with matching arguments', () => {
-      it('throws', done => {
-        const mockArgument = {
+    describe('when a request to the nock has been made with matching arguments', function() {
+      it('throws', function(done) {
+        var assertion;
+        var mockArgument = {
           test: 12345,
         };
-        const requestNock = nock(TEST_URL)
+        var requestNock = nock(TEST_URL)
           .get('/')
           .reply(200);
         request({
@@ -158,15 +170,17 @@ describe('requestedWith() assertions', () => {
           body: mockArgument,
         });
 
-        const assertion = expect(requestNock).not.to.have.been.requestedWith(
-          mockArgument,
+        assertion = expect(requestNock).not.to.have.been.requestedWith(
+          mockArgument
         );
 
         return assertion
-          .then(() => done.fail('Should have thrown an error'))
-          .catch(err => {
+          .then(function() {
+            done.fail('Should have thrown an error');
+          })
+          .catch(function(err) {
             expect(err.message).to.equal(
-              'expected Nock to have not been requested with { test: 12345 }',
+              'expected Nock to have not been requested with { test: 12345 }'
             );
             done();
           });
