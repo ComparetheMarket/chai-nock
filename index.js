@@ -66,7 +66,7 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWith', function(arg) {
+  Assertion.addMethod('requestedWithExactBody', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
@@ -75,14 +75,14 @@ module.exports = chai => {
           return this.assert(
             true,
             null,
-            'expected Nock to have not been requested with #{exp}',
+            'expected Nock to have not been requested with exact body #{exp}',
             arg,
           );
         }
         return this.assert(
           false,
-          'expected Nock to have been requested with #{exp}, but was requested with #{act}',
-          'expected Nock to have not been requested with #{exp}',
+          'expected Nock to have been requested with exact body #{exp}, but was requested with body #{act}',
+          'expected Nock to have not been requested with exact body #{exp}',
           arg,
           body,
         );

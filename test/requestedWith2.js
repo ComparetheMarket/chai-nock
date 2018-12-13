@@ -2,7 +2,7 @@ const { expect, use } = require('chai');
 const nock = require('nock');
 const request = require('request-promise-native');
 
-const chaiNock = require('../');
+const chaiNock = require('..');
 
 use(chaiNock);
 
@@ -46,7 +46,7 @@ describe('requestedWith() assertions', () => {
         });
       });
 
-      describe('with an Object as an argument', () => {
+      describe('when the argument object fuzzy matches the request headers', () => {
         it('passes', () => {
           const requestNock = nock(TEST_URL)
             .get('/')
@@ -54,13 +54,27 @@ describe('requestedWith() assertions', () => {
           request({
             json: true,
             uri: TEST_URL,
-            body: {
-              test: 123,
-            },
+            body: { test: 123, test2: 456 },
           });
 
-          return expect(requestNock).to.have.been.requestedWith({
+          return expect(requestNock).to.have.been.requestedWithHeaders({
             test: 123,
+          });
+        });
+      });
+
+      describe('when the argument object exactly matches the request headers', () => {
+        it('passes', () => {
+          const requestNock = nock(TEST_URL)
+            .get('/')
+            .reply(200);
+          request(requestObj);
+
+          return expect(requestNock).to.have.been.requestedWithHeaders({
+            test: 123,
+            test2: 456,
+            host: 'someurl.com',
+            accept: 'application/json',
           });
         });
       });
