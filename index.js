@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle, func-names */
 
 const equal = require('deep-equal');
 
@@ -9,25 +9,28 @@ module.exports = chai => {
   function promisfyNockInterceptor(nock) {
     return new Promise((resolve, reject) => {
       let body;
-      let receivedHeaders;
+      let headers;
 
       const timeout = setTimeout(() => {
         reject(new Error('The request has not been recieved by Nock'));
       }, MAX_TIMEOUT);
 
-      nock.once('request', ({ headers }, interceptor, reqBody) => {
-        try {
-          receivedHeaders = headers;
+      nock.once(
+        'request',
+        ({ headers: requestHeaders }, interceptor, reqBody) => {
+          try {
+            headers = requestHeaders;
 
-          body = JSON.parse(reqBody);
-        } catch (err) {
-          body = reqBody;
-        }
-      });
+            body = JSON.parse(reqBody);
+          } catch (err) {
+            body = reqBody;
+          }
+        },
+      );
 
       nock.once('replied', () => {
         clearTimeout(timeout);
-        resolve({ body, receivedHeaders });
+        resolve({ body, headers });
       });
 
       nock.on('error', err => {
@@ -47,7 +50,7 @@ module.exports = chai => {
     }
   }
 
-  Assertion.addProperty('requested', () => {
+  Assertion.addProperty('requested', function() {
     isNock(this._obj);
     const assert = value => {
       this.assert(
@@ -63,12 +66,12 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWith', arg => {
+  Assertion.addMethod('requestedWith', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
-      nockRequest => {
-        if (equal(nockRequest, arg)) {
+      ({ body }) => {
+        if (equal(body, arg)) {
           return this.assert(
             true,
             null,
@@ -81,7 +84,7 @@ module.exports = chai => {
           'expected Nock to have been requested with #{exp}, but was requested with #{act}',
           'expected Nock to have not been requested with #{exp}',
           arg,
-          nockRequest,
+          body,
         );
       },
       () =>
@@ -92,12 +95,12 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWithExactHeaders', arg => {
+  Assertion.addMethod('requestedWithExactHeaders', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
-      ({ receivedHeaders }) => {
-        if (equal(receivedHeaders, arg)) {
+      ({ headers }) => {
+        if (equal(headers, arg)) {
           return this.assert(
             true,
             null,
@@ -110,7 +113,7 @@ module.exports = chai => {
           'expected Nock to have been requested with exact headers #{exp}, but was requested with headers #{act}',
           'expected Nock to have not been requested with exact headers #{exp}',
           arg,
-          receivedHeaders,
+          headers,
         );
       },
       () =>
@@ -121,13 +124,13 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWithHeaders', arg => {
+  Assertion.addMethod('requestedWithHeaders', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
-      ({ receivedHeaders }) => {
-        const mergedHeaders = Object.assign({}, receivedHeaders, arg);
-        if (equal(receivedHeaders, mergedHeaders)) {
+      ({ headers }) => {
+        const mergedHeaders = Object.assign({}, headers, arg);
+        if (equal(headers, mergedHeaders)) {
           return this.assert(
             true,
             null,
@@ -140,7 +143,7 @@ module.exports = chai => {
           'expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}',
           'expected Nock to have not been requested with #{exp}',
           arg,
-          receivedHeaders,
+          headers,
         );
       },
       () =>
