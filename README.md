@@ -55,22 +55,22 @@ expect(nock).to.have.been.requestedWith(body);
 expect(nock).not.to.have.been.requestedWith(body);
 ```
 
-#### requestedWithExactHeaders(headers)
+#### requestedWithHeaders(headers)
 
 Asserts that a request has been made to the nock with headers that exactly match the object provided.
 
 ```javascript
-expect(nock).to.have.been.requestedWithExactHeaders(headers);
-expect(nock).not.to.have.been.requestedWithExactHeaders(headers);
+expect(nock).to.have.been.requestedWithHeaders(headers);
+expect(nock).not.to.have.been.requestedWithHeaders(headers);
 ```
 
-#### requestedWithHeaders(headers)
+#### requestedWithHeadersMatch(headers)
 
 Asserts that a request has been made to the nock with headers that contain the key/value pairs in the object provided.
 
 ```javascript
-expect(nock).to.have.been.requestedWithHeaders(headers);
-expect(nock).not.to.have.been.requestedWithHeaders(headers);
+expect(nock).to.have.been.requestedWithHeadersMatch(headers);
+expect(nock).not.to.have.been.requestedWithHeadersMatch(headers);
 ```
 
 ## Examples
@@ -103,7 +103,7 @@ describe("example", () => {
 });
 ```
 
-### `requestedWithExactHeaders`
+### `requestedWithHeaders`
 
 ```javascript
 const { expect } = require("chai");
@@ -124,7 +124,7 @@ describe("example", () => {
       }
     });
 
-    return expect(requestNock).to.have.been.requestedWithExactHeaders({
+    return expect(requestNock).to.have.been.requestedWithHeaders({
       host: "bbc.co.uk",
       accept: "application/json",
       myHeader: "myHeaderValue"
@@ -135,7 +135,7 @@ describe("example", () => {
 
 _Note: request-promise-native library adds `host` and `accept` headers from the `uri` and `json` options provided so we need to include them in our exact headers object_
 
-### `requestedWithHeaders`
+### `requestedWithHeadersMatch`
 
 ```javascript
 const { expect } = require("chai");
@@ -157,7 +157,7 @@ describe("example", () => {
       }
     });
 
-    return expect(requestNock).to.have.been.requestedWithHeaders({
+    return expect(requestNock).to.have.been.requestedWithHeadersMatch({
       myHeader: "myHeaderValue"
     });
   });

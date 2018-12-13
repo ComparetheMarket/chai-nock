@@ -6,7 +6,7 @@ const chaiNock = require('..');
 
 use(chaiNock);
 
-describe('requestedWithExactBody() assertions', () => {
+describe('requestedWith() assertions', () => {
   const TEST_URL = 'http://someurl.com';
 
   afterEach(() => {
@@ -15,23 +15,21 @@ describe('requestedWithExactBody() assertions', () => {
 
   describe('when asserting on a type that is not a Nock', () => {
     it('throws a type error', () => {
-      expect(() =>
-        expect('NOT_A_NOCK').to.have.been.requestedWithExactBody(),
-      ).to.throw(TypeError);
-
-      expect(() => expect({}).to.have.been.requestedWithExactBody()).to.throw(
+      expect(() => expect('NOT_A_NOCK').to.have.been.requestedWith()).to.throw(
         TypeError,
       );
+
+      expect(() => expect({}).to.have.been.requestedWith()).to.throw(TypeError);
 
       expect(() =>
         expect(
           nock('http://url-without.a').get('/interceptor'),
-        ).to.have.been.requestedWithExactBody(),
+        ).to.have.been.requestedWith(),
       ).to.throw(TypeError);
     });
   });
 
-  describe('.requestedWithExactBody()', () => {
+  describe('.requestedWith()', () => {
     describe('when a request to the nock has been made with the correct argument', () => {
       describe('with a simple argument', () => {
         it('passes', () => {
@@ -44,9 +42,7 @@ describe('requestedWithExactBody() assertions', () => {
             body: 'test',
           });
 
-          return expect(requestNock).to.have.been.requestedWithExactBody(
-            'test',
-          );
+          return expect(requestNock).to.have.been.requestedWith('test');
         });
       });
 
@@ -63,7 +59,7 @@ describe('requestedWithExactBody() assertions', () => {
             },
           });
 
-          return expect(requestNock).to.have.been.requestedWithExactBody({
+          return expect(requestNock).to.have.been.requestedWith({
             test: 123,
           });
         });
@@ -81,9 +77,7 @@ describe('requestedWithExactBody() assertions', () => {
           body: { test: 1 },
         });
 
-        const assertion = expect(
-          requestNock,
-        ).to.have.been.requestedWithExactBody({
+        const assertion = expect(requestNock).to.have.been.requestedWith({
           test: 2,
         });
 
@@ -104,9 +98,7 @@ describe('requestedWithExactBody() assertions', () => {
           .get('/')
           .reply(200);
 
-        const assertion = expect(
-          requestNock,
-        ).to.have.been.requestedWithExactBody({
+        const assertion = expect(requestNock).to.have.been.requestedWith({
           test: 123,
         });
 
@@ -122,7 +114,7 @@ describe('requestedWithExactBody() assertions', () => {
     });
   });
 
-  describe('.not.requestedWithExactBody()', () => {
+  describe('.not.requestedWith()', () => {
     describe('when a request to the nock has been made with the incorrect arguments', () => {
       it('passes', () => {
         const requestNock = nock(TEST_URL)
@@ -134,7 +126,7 @@ describe('requestedWithExactBody() assertions', () => {
           body: { test: 123 },
         });
 
-        return expect(requestNock).not.to.have.been.requestedWithExactBody(
+        return expect(requestNock).not.to.have.been.requestedWith(
           'different_value',
         );
       });
@@ -146,7 +138,7 @@ describe('requestedWithExactBody() assertions', () => {
           .get('/')
           .reply(200);
 
-        return expect(requestNock).not.to.have.been.requestedWithExactBody(
+        return expect(requestNock).not.to.have.been.requestedWith(
           'different_value',
         );
       });
@@ -166,9 +158,9 @@ describe('requestedWithExactBody() assertions', () => {
           body: mockArgument,
         });
 
-        const assertion = expect(
-          requestNock,
-        ).not.to.have.been.requestedWithExactBody(mockArgument);
+        const assertion = expect(requestNock).not.to.have.been.requestedWith(
+          mockArgument,
+        );
 
         return assertion
           .then(() => done.fail('Should have thrown an error'))

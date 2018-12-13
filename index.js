@@ -52,6 +52,7 @@ module.exports = chai => {
 
   Assertion.addProperty('requested', function() {
     isNock(this._obj);
+
     const assert = value => {
       this.assert(
         value,
@@ -66,7 +67,7 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWithExactBody', function(arg) {
+  Assertion.addMethod('requestedWith', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
@@ -95,7 +96,7 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWithExactHeaders', function(arg) {
+  Assertion.addMethod('requestedWithHeaders', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
@@ -104,14 +105,14 @@ module.exports = chai => {
           return this.assert(
             true,
             null,
-            'expected Nock to have not been requested with exact headers #{exp}',
+            'expected Nock to have not been requested with headers #{exp}',
             arg,
           );
         }
         return this.assert(
           false,
-          'expected Nock to have been requested with exact headers #{exp}, but was requested with headers #{act}',
-          'expected Nock to have not been requested with exact headers #{exp}',
+          'expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}',
+          'expected Nock to have not been requested with headers #{exp}',
           arg,
           headers,
         );
@@ -124,7 +125,7 @@ module.exports = chai => {
     );
   });
 
-  Assertion.addMethod('requestedWithHeaders', function(arg) {
+  Assertion.addMethod('requestedWithHeadersMatch', function(arg) {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
@@ -141,7 +142,7 @@ module.exports = chai => {
         return this.assert(
           false,
           'expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}',
-          'expected Nock to have not been requested with #{exp}',
+          'expected Nock to have not been requested with headers #{exp}',
           arg,
           headers,
         );

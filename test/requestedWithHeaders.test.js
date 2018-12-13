@@ -14,7 +14,6 @@ describe('requestedWithHeaders() assertions', () => {
     uri: TEST_URL,
     headers: {
       test: 123,
-      test2: 456,
     },
   };
 
@@ -42,7 +41,7 @@ describe('requestedWithHeaders() assertions', () => {
 
   describe('.requestedWithHeaders()', () => {
     describe('when a request to the nock has been made with the correct argument', () => {
-      describe('when the argument object fuzzy matches the request headers', () => {
+      describe('with an Object as an argument', () => {
         it('passes', () => {
           const requestNock = nock(TEST_URL)
             .get('/')
@@ -51,20 +50,6 @@ describe('requestedWithHeaders() assertions', () => {
 
           return expect(requestNock).to.have.been.requestedWithHeaders({
             test: 123,
-          });
-        });
-      });
-
-      describe('when the argument object exactly matches the request headers', () => {
-        it('passes', () => {
-          const requestNock = nock(TEST_URL)
-            .get('/')
-            .reply(200);
-          request(requestObj);
-
-          return expect(requestNock).to.have.been.requestedWithHeaders({
-            test: 123,
-            test2: 456,
             host: 'someurl.com',
             accept: 'application/json',
           });
@@ -73,78 +58,25 @@ describe('requestedWithHeaders() assertions', () => {
     });
 
     describe('when a request to the nock has been made but with incorrect arguments', () => {
-      describe('with an Object as an argument', () => {
-        describe('when none of the key/value pairs in the object are in the request headers', () => {
-          it('throws', done => {
-            const requestNock = nock(TEST_URL)
-              .get('/')
-              .reply(200);
-            request(requestObj);
+      it('throws', done => {
+        const requestNock = nock(TEST_URL)
+          .get('/')
+          .reply(200);
+        request(requestObj);
 
-            const assertion = expect(
-              requestNock,
-            ).to.have.been.requestedWithHeaders({ wrongKey: 789 });
+        const assertion = expect(requestNock).to.have.been.requestedWithHeaders(
+          { test: 2 },
+        );
+        const actualHeaders = '{ Object (test, host, ...) }'; // Chai truncates the object to this string
 
-            const actualHeaders = '{ Object (test, test2, ...) }'; // Chai truncates the object to this string
-
-            return assertion
-              .then(() => done.fail('Should have thrown an error'))
-              .catch(err => {
-                expect(err.message).to.contain(
-                  `expected Nock to have been requested with headers { wrongKey: 789 }, but was requested with headers ${actualHeaders}`,
-                );
-                done();
-              });
+        return assertion
+          .then(() => done.fail('Should have thrown an error'))
+          .catch(err => {
+            expect(err.message).to.contain(
+              `expected Nock to have been requested with headers { test: 2 }, but was requested with headers ${actualHeaders}`,
+            );
+            done();
           });
-        });
-
-        describe('when only one of the key/value pairs in the object is in the request headers', () => {
-          it('throws', done => {
-            const requestNock = nock(TEST_URL)
-              .get('/')
-              .reply(200);
-            request(requestObj);
-
-            const assertion = expect(
-              requestNock,
-            ).to.have.been.requestedWithHeaders({ wrongKey: 789, test: 123 });
-
-            const actualHeaders = '{ Object (test, test2, ...) }'; // Chai truncates the object to this string
-
-            return assertion
-              .then(() => done.fail('Should have thrown an error'))
-              .catch(err => {
-                expect(err.message).to.contain(
-                  `expected Nock to have been requested with headers { wrongKey: 789, test: 123 }, but was requested with headers ${actualHeaders}`,
-                );
-                done();
-              });
-          });
-
-          describe('when the object and headers share a key but with different values', () => {
-            it('throws', done => {
-              const requestNock = nock(TEST_URL)
-                .get('/')
-                .reply(200);
-              request(requestObj);
-
-              const assertion = expect(
-                requestNock,
-              ).to.have.been.requestedWithHeaders({ test: 'DifferentValue' });
-
-              const actualHeaders = '{ Object (test, test2, ...) }'; // Chai truncates the object to this string
-
-              return assertion
-                .then(() => done.fail('Should have thrown an error'))
-                .catch(err => {
-                  expect(err.message).to.contain(
-                    `expected Nock to have been requested with headers { test: 'DifferentValue' }, but was requested with headers ${actualHeaders}`,
-                  );
-                  done();
-                });
-            });
-          });
-        });
       });
     });
 
@@ -207,13 +139,16 @@ describe('requestedWithHeaders() assertions', () => {
           requestNock,
         ).not.to.have.been.requestedWithHeaders({
           test: 123,
+          host: 'someurl.com',
+          accept: 'application/json',
         });
+        const headersString = '{ Object (test, host, ...) }'; // Chai truncates the object to this string
 
         return assertion
           .then(() => done.fail('Should have thrown an error'))
           .catch(err => {
             expect(err.message).to.equal(
-              'expected Nock to have not been requested with headers { test: 123 }',
+              `expected Nock to have not been requested with headers ${headersString}`,
             );
             done();
           });
