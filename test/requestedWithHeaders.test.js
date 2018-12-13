@@ -41,18 +41,16 @@ describe('requestedWithHeaders() assertions', () => {
 
   describe('.requestedWithHeaders()', () => {
     describe('when a request to the nock has been made with the correct argument', () => {
-      describe('with an Object as an argument', () => {
-        it('passes', () => {
-          const requestNock = nock(TEST_URL)
-            .get('/')
-            .reply(200);
-          request(requestObj);
+      it('passes', () => {
+        const requestNock = nock(TEST_URL)
+          .get('/')
+          .reply(200);
+        request(requestObj);
 
-          return expect(requestNock).to.have.been.requestedWithHeaders({
-            test: 123,
-            host: 'someurl.com',
-            accept: 'application/json',
-          });
+        return expect(requestNock).to.have.been.requestedWithHeaders({
+          test: 123,
+          host: 'someurl.com',
+          accept: 'application/json',
         });
       });
     });
