@@ -126,7 +126,7 @@ module.exports = chai => {
 
     return promisfyNockInterceptor(this._obj).then(
       ({ headers }) => {
-        const mergedHeaders = Object.assign({}, arg, headers);
+        const mergedHeaders = Object.assign({}, headers, arg);
         if (equal(headers, mergedHeaders)) {
           return this.assert(
             true,

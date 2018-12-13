@@ -120,6 +120,30 @@ describe("requestedWithHeaders() assertions", () => {
                 done();
               });
           });
+
+          describe("when the object and headers share a key but with different values", () => {
+            it("throws", done => {
+              const requestNock = nock(TEST_URL)
+                .get("/")
+                .reply(200);
+              request(requestObj);
+      
+              const assertion = expect(
+                requestNock
+              ).to.have.been.requestedWithHeaders({ test: 'DifferentValue' });
+              
+              const actualHeaders = "{ Object (test, test2, ...) }"; // Chai truncates the object to this string
+      
+              return assertion
+                .then(() => done.fail("Should have thrown an error"))
+                .catch(err => {
+                  expect(err.message).to.contain(
+                    `expected Nock to have been requested with headers { test: 'DifferentValue' }, but was requested with headers ${actualHeaders}`
+                  );
+                  done();
+                });
+            });
+          });
         });
       });
     });
