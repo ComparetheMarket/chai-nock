@@ -1,23 +1,23 @@
-"use strict";
+/* eslint-disable no-underscore-dangle */
 
-const equal = require("deep-equal");
+const equal = require('deep-equal');
 
 module.exports = chai => {
-  const Assertion = chai.Assertion;
+  const { Assertion } = chai;
   const MAX_TIMEOUT = 2000;
 
   function promisfyNockInterceptor(nock) {
     return new Promise((resolve, reject) => {
       let body;
-      let headers;
+      let receivedHeaders;
 
       const timeout = setTimeout(() => {
-        reject(new Error("The request has not been recieved by Nock"));
+        reject(new Error('The request has not been recieved by Nock'));
       }, MAX_TIMEOUT);
 
-      nock.once("request", (req, interceptor, reqBody) => {
+      nock.once('request', ({ headers }, interceptor, reqBody) => {
         try {
-          headers = req.headers;
+          receivedHeaders = headers;
 
           body = JSON.parse(reqBody);
         } catch (err) {
@@ -25,12 +25,12 @@ module.exports = chai => {
         }
       });
 
-      nock.once("replied", () => {
+      nock.once('replied', () => {
         clearTimeout(timeout);
-        resolve({ body, headers });
+        resolve({ body, receivedHeaders });
       });
 
-      nock.on("error", err => {
+      nock.on('error', err => {
         clearTimeout(timeout);
         reject(err);
       });
@@ -39,115 +39,115 @@ module.exports = chai => {
 
   function isNock(obj) {
     if (
-      typeof obj !== "object" ||
+      typeof obj !== 'object' ||
       !obj.interceptors ||
       !obj.interceptors.length
     ) {
-      throw new TypeError("You must provide a valid Nock");
+      throw new TypeError('You must provide a valid Nock');
     }
   }
 
-  Assertion.addProperty("requested", function() {
+  Assertion.addProperty('requested', () => {
     isNock(this._obj);
     const assert = value => {
       this.assert(
         value,
-        "expected Nock to have been requested",
-        "expected Nock to have not been requested"
+        'expected Nock to have been requested',
+        'expected Nock to have not been requested',
       );
     };
 
     return promisfyNockInterceptor(this._obj).then(
       () => assert(true),
-      () => assert(false)
+      () => assert(false),
     );
   });
 
-  Assertion.addMethod("requestedWith", function(arg) {
+  Assertion.addMethod('requestedWith', arg => {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
-      ({ body }) => {
-        if (equal(body, arg)) {
+      nockRequest => {
+        if (equal(nockRequest, arg)) {
           return this.assert(
             true,
             null,
-            "expected Nock to have not been requested with #{exp}",
-            arg
+            'expected Nock to have not been requested with #{exp}',
+            arg,
           );
         }
         return this.assert(
           false,
-          "expected Nock to have been requested with #{exp}, but was requested with #{act}",
-          "expected Nock to have not been requested with #{exp}",
+          'expected Nock to have been requested with #{exp}, but was requested with #{act}',
+          'expected Nock to have not been requested with #{exp}',
           arg,
-          body
+          nockRequest,
         );
       },
       () =>
         this.assert(
           false,
-          "expected Nock to have been requested, but it was never called"
-        )
+          'expected Nock to have been requested, but it was never called',
+        ),
     );
   });
 
-  Assertion.addMethod("requestedWithExactHeaders", function(arg) {
+  Assertion.addMethod('requestedWithExactHeaders', arg => {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
-      ({ headers }) => {
-        if (equal(headers, arg)) {
+      ({ receivedHeaders }) => {
+        if (equal(receivedHeaders, arg)) {
           return this.assert(
             true,
             null,
-            "expected Nock to have not been requested with exact headers #{exp}",
-            arg
+            'expected Nock to have not been requested with exact headers #{exp}',
+            arg,
           );
         }
         return this.assert(
           false,
-          "expected Nock to have been requested with exact headers #{exp}, but was requested with headers #{act}",
-          "expected Nock to have not been requested with exact headers #{exp}",
+          'expected Nock to have been requested with exact headers #{exp}, but was requested with headers #{act}',
+          'expected Nock to have not been requested with exact headers #{exp}',
           arg,
-          headers
+          receivedHeaders,
         );
       },
       () =>
         this.assert(
           false,
-          "expected Nock to have been requested, but it was never called"
-        )
+          'expected Nock to have been requested, but it was never called',
+        ),
     );
   });
 
-  Assertion.addMethod("requestedWithHeaders", function(arg) {
+  Assertion.addMethod('requestedWithHeaders', arg => {
     isNock(this._obj);
 
     return promisfyNockInterceptor(this._obj).then(
-      ({ headers }) => {
-        const mergedHeaders = Object.assign({}, headers, arg);
-        if (equal(headers, mergedHeaders)) {
+      ({ receivedHeaders }) => {
+        const mergedHeaders = Object.assign({}, receivedHeaders, arg);
+        if (equal(receivedHeaders, mergedHeaders)) {
           return this.assert(
             true,
             null,
-            "expected Nock to have not been requested with headers #{exp}",
-            arg
+            'expected Nock to have not been requested with headers #{exp}',
+            arg,
           );
         }
         return this.assert(
           false,
-          "expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}",
-          "expected Nock to have not been requested with #{exp}",
+          'expected Nock to have been requested with headers #{exp}, but was requested with headers #{act}',
+          'expected Nock to have not been requested with #{exp}',
           arg,
-          headers
+          receivedHeaders,
         );
       },
       () =>
         this.assert(
           false,
-          "expected Nock to have been requested, but it was never called"
-        )
+          'expected Nock to have been requested, but it was never called',
+        ),
     );
   });
 };
