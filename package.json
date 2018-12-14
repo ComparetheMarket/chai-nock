@@ -1,10 +1,11 @@
 {
   "name": "chai-nock",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Extends Chai with assertions for the Nock Http mocking framework",
   "main": "index.js",
   "scripts": {
     "test": "jest test",
+    "test:watch": "jest test --watch",
     "style": "eslint ."
   },
   "keywords": [
