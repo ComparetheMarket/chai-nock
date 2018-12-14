@@ -19,14 +19,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ComparetheMarket/chai-nock.git"
+    "url": "git+https://github.com/chrisandrews7/chai-nock.git"
   },
-  "author": "Chris Andrews, Ben Vaughan-Jones",
+  "author": "Chris Andrews, Ben Vaughan-Jones, Rick Clark",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ComparetheMarket/chai-nock/issues"
+    "url": "https://github.com/chrisandrews7/chai-nock/issues"
   },
-  "homepage": "https://github.com/ComparetheMarket/chai-nock#readme",
+  "homepage": "https://github.com/chrisandrews7/chai-nock#readme",
   "devDependencies": {
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
