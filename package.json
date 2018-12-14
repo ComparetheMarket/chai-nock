@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest test",
-    "test:watch": "jest test --watch",
+    "test:coverage": "npm test -- --coverage",
     "style": "eslint ."
   },
   "keywords": [
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/chrisandrews7/chai-nock#readme",
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^3.3.0",

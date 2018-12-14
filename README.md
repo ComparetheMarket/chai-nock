@@ -1,6 +1,6 @@
 # Chai Assertions for Nock
 
-[![npm version](https://img.shields.io/npm/v/chai-nock.svg?style=flat)](https://www.npmjs.com/package/chai-nock)
+[![Build Status](https://travis-ci.org/chrisandrews7/chai-nock.svg?branch=master)](https://travis-ci.org/chrisandrews7/chai-nock) [![Coverage Status](https://coveralls.io/repos/github/chrisandrews7/chai-nock/badge.svg?branch=master)](https://coveralls.io/github/chrisandrews7/chai-nock?branch=master) [![npm version](https://img.shields.io/npm/v/chai-nock.svg?style=flat)](https://www.npmjs.com/package/chai-nock)
 
 **Nock Chai** extends [Chai](http://chaijs.com/) with a language for asserting facts about [Nock](https://www.npmjs.com/package/nock).
 
@@ -37,47 +37,98 @@ chai.use(chaiNock);
 
 ## Assertions
 
-### `requested`
+### requested
 
 Asserts that a request has been made to the nock.
 
 ```javascript
-expect(nock).to.have.been.requested;
-expect(nock).not.to.have.been.requested;
-```
+it('requested', () => {
+  const requestNock = nock('http://bbc.co.uk')
+    .get('/')
+    .reply(200);
 
-#### Example
-
-```javascript
-const { expect } = require('chai');
-const nock = require('nock');
-const request = require('request-promise-native');
-
-describe('example', () => {
-  it('should make a request to bbc.co.uk', function() {
-    const requestNock = nock('http://bbc.co.uk')
-      .get('/')
-      .reply(200);
-
-    request({
-      uri: 'http://bbc.co.uk',
-    });
-
-    return expect(requestNock).to.have.been.requested;
+  request({
+    uri: 'http://bbc.co.uk',
   });
+
+  return expect(requestNock).to.have.been.requested;
 });
 ```
 
-### `requestedWith(body)`
+### requestedWith(body)
 
 Asserts that a request has been made to the nock with a body that exactly matches the object provided.
 
 ```javascript
-expect(nock).to.have.been.requestedWith(body);
-expect(nock).not.to.have.been.requestedWith(body);
+it('requestedWith', () => {
+  const requestNock = nock('http://bbc.co.uk')
+    .get('/')
+    .reply(200);
+
+  request({
+    json: true,
+    uri: 'http://bbc.co.uk',
+    body: {
+      hello: 'world'
+    }
+  });
+
+  return expect(requestNock).to.have.been.requestedWith({ hello: 'world' });
+});
 ```
 
-#### Example
+### requestedWithHeaders(headers)
+
+Asserts that a request has been made to the nock with headers that exactly match the object provided.
+
+```javascript
+it('requestedWithHeaders', () => {
+  const requestNock = nock('http://bbc.co.uk')
+    .get('/')
+    .reply(200);
+
+  request({
+    json: true,
+    uri: 'http://bbc.co.uk',
+    headers: {
+      myHeader: 'myHeaderValue'
+    }
+  });
+
+  return expect(requestNock).to.have.been.requestedWithHeaders({
+    host: 'bbc.co.uk',
+    accept: 'application/json',
+    myHeader: 'myHeaderValue'
+  });
+});
+```
+
+### requestedWithHeadersMatch(partialHeaders)
+
+Asserts that a request has been made to the nock with headers that contain the key/value pairs in the object provided.
+
+```javascript
+it('requestedWithHeadersMatch', () => {
+  const requestNock = nock('http://bbc.co.uk')
+    .get('/')
+    .reply(200);
+
+  request({
+    json: true,
+    uri: 'http://bbc.co.uk',
+    headers: {
+      myHeader: 'myHeaderValue',
+      otherHeader: 'otherHeaderValue'
+    }
+  });
+
+  return expect(requestNock).to.have.been.requestedWithHeadersMatch({
+    myHeader: 'myHeaderValue'
+  });
+});
+```
+
+## Usage
 
 ```javascript
 const { expect } = require('chai');
@@ -85,10 +136,10 @@ const nock = require('nock');
 const request = require('request-promise-native');
 
 describe('example', () => {
-  it('should make a request to bbc.co.uk', function() {
+  it('test', () => {
     const requestNock = nock('http://bbc.co.uk')
-      .get('/')
-      .reply(200);
+    .get('/')
+    .reply(200);
 
     request({
       json: true,
@@ -99,85 +150,6 @@ describe('example', () => {
     });
 
     return expect(requestNock).to.have.been.requestedWith({ hello: 'world' });
-  });
-});
-```
-
-### `requestedWithHeaders(headers)`
-
-Asserts that a request has been made to the nock with headers that exactly match the object provided.
-
-```javascript
-expect(nock).to.have.been.requestedWithHeaders(headers);
-expect(nock).not.to.have.been.requestedWithHeaders(headers);
-```
-
-#### Example
-
-```javascript
-const { expect } = require('chai');
-const nock = require('nock');
-const request = require('request-promise-native');
-
-describe('example', () => {
-  it('should make a request to bbc.co.uk with exactly correct headers', function() {
-    const requestNock = nock('http://bbc.co.uk')
-      .get('/')
-      .reply(200);
-
-    request({
-      json: true,
-      uri: 'http://bbc.co.uk',
-      headers: {
-        myHeader: 'myHeaderValue'
-      }
-    });
-
-    return expect(requestNock).to.have.been.requestedWithHeaders({
-      host: 'bbc.co.uk',
-      accept: 'application/json',
-      myHeader: 'myHeaderValue'
-    });
-  });
-});
-```
-
-_Note: request-promise-native library adds `host` and `accept` headers from the `uri` and `json` options provided so we need to include them in our exact headers object_
-
-### `requestedWithHeadersMatch(headers)`
-
-Asserts that a request has been made to the nock with headers that contain the key/value pairs in the object provided.
-
-```javascript
-expect(nock).to.have.been.requestedWithHeadersMatch(headers);
-expect(nock).not.to.have.been.requestedWithHeadersMatch(headers);
-```
-
-#### Example
-
-```javascript
-const { expect } = require('chai');
-const nock = require('nock');
-const request = require('request-promise-native');
-
-describe('example', () => {
-  it('should make a request to bbc.co.uk the correct myHeader value in the headers', function() {
-    const requestNock = nock('http://bbc.co.uk')
-      .get('/')
-      .reply(200);
-
-    request({
-      json: true,
-      uri: 'http://bbc.co.uk',
-      headers: {
-        myHeader: 'myHeaderValue',
-        otherHeader: 'otherHeaderValue'
-      }
-    });
-
-    return expect(requestNock).to.have.been.requestedWithHeadersMatch({
-      myHeader: 'myHeaderValue'
-    });
   });
 });
 ```
