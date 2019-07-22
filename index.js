@@ -4,7 +4,7 @@ const equal = require('deep-equal');
 
 module.exports = chai => {
   const { Assertion } = chai;
-  const MAX_TIMEOUT = 2000;
+  const MAX_TIMEOUT = process.env.MAX_TIMEOUT || 2000;
 
   function promisfyNockInterceptor(nock) {
     return new Promise((resolve, reject) => {
