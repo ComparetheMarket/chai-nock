@@ -154,8 +154,4 @@ module.exports = chai => {
         ),
     );
   });
-
-  Assertion.addMethod('in', arg => {
-    console.log('this is arg', arg);
-  });
 };
