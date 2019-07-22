@@ -13,7 +13,7 @@ module.exports = chai => {
 
       const timeout = setTimeout(() => {
         reject(new Error('The request has not been recieved by Nock'));
-      }, MAX_TIMEOUT);
+      }, nock.timeout || MAX_TIMEOUT);
 
       nock.once(
         'request',
@@ -153,5 +153,9 @@ module.exports = chai => {
           'expected Nock to have been requested, but it was never called',
         ),
     );
+  });
+
+  Assertion.addMethod('in', arg => {
+    console.log('this is arg', arg);
   });
 };
