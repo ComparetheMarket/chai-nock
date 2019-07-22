@@ -11,9 +11,12 @@ module.exports = chai => {
       let body;
       let headers;
 
-      const timeout = setTimeout(() => {
-        reject(new Error('The request has not been recieved by Nock'));
-      }, nock.timeout || MAX_TIMEOUT);
+      const timeout = setTimeout(
+        () => {
+          reject(new Error('The request has not been recieved by Nock'));
+        },
+        Number.isInteger(nock.timeout) ? nock.timeout : MAX_TIMEOUT,
+      );
 
       nock.once(
         'request',
