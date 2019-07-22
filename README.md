@@ -129,6 +129,8 @@ it('requestedWithHeadersMatch', () => {
 ```
 
 ### Setting a timeout
+* The default timeout is set to 2000ms 
+* You can set your own timeout on the nock like so:
 
 ```javascript
 it('requested', () => {
