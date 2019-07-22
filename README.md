@@ -134,7 +134,7 @@ it('requestedWithHeadersMatch', () => {
 ```javascript
   requestNock.timeout = 5000;
 ```
-* Or you can a global timeout by setting MAX_TIMEOUT as an environment variable
+* Or you can set a global timeout by exporting MAX_TIMEOUT as an environment variable
 
 ## Usage
 
