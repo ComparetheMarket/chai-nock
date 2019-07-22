@@ -130,31 +130,15 @@ it('requestedWithHeadersMatch', () => {
 
 ### Setting a timeout
 * The default timeout is set to 2000ms 
-* You can set your own timeout on the nock like so:
-
+* You can set your own timeout per test on the nock like so:
 ```javascript
-it('requested', () => {
-  const requestNock = nock('http://bbc.co.uk')
-    .get('/')
-    .reply(200);
-
-  // Set a timeout for 5 seconds
   requestNock.timeout = 5000;
-
-  request({
-    json: true,
-    uri: 'http://bbc.co.uk',
-    body: {
-      hello: 'world'
-    }
-  });
-
-  return expect(requestNock).to.have.been.requested;
-});
 ```
+* Or you can a global timeout by setting MAX_TIMEOUT as an environment variable
 
 ## Usage
 
+* Without timeout
 ```javascript
 const { expect } = require('chai');
 const nock = require('nock');
@@ -176,5 +160,27 @@ describe('example', () => {
 
     return expect(requestNock).to.have.been.requestedWith({ hello: 'world' });
   });
+});
+```
+
+* With timeout
+```javascript
+it('requested', () => {
+  const requestNock = nock('http://bbc.co.uk')
+    .get('/')
+    .reply(200);
+
+  // Set a timeout for 5 seconds
+  requestNock.timeout = 5000;  
+
+  request({
+    json: true,
+    uri: 'http://bbc.co.uk',
+    body: {
+      hello: 'world'
+    }
+  });
+
+  return expect(requestNock).to.have.been.requested;
 });
 ```
