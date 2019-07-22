@@ -128,6 +128,29 @@ it('requestedWithHeadersMatch', () => {
 });
 ```
 
+### Setting a timeout
+
+```javascript
+it('requested', () => {
+  const requestNock = nock('http://bbc.co.uk')
+    .get('/')
+    .reply(200);
+
+  // Set a timeout for 5 seconds
+  requestNock.timeout = 5000;
+
+  request({
+    json: true,
+    uri: 'http://bbc.co.uk',
+    body: {
+      hello: 'world'
+    }
+  });
+
+  return expect(requestNock).to.have.been.requested;
+});
+```
+
 ## Usage
 
 ```javascript
