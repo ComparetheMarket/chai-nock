@@ -138,7 +138,6 @@ it('requestedWithHeadersMatch', () => {
 
 ## Usage
 
-* Without timeout
 ```javascript
 const { expect } = require('chai');
 const nock = require('nock');
@@ -163,7 +162,7 @@ describe('example', () => {
 });
 ```
 
-* With timeout
+### Using a timeout
 ```javascript
 it('requested', () => {
   const requestNock = nock('http://bbc.co.uk')
