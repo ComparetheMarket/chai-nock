@@ -30,7 +30,7 @@ Then add to your test setup:
 
 ```javascript
 const chai = require('chai');
-const chaiNock = require('chai-nock');
+const { chaiNock } = require('chai-nock');
 
 chai.use(chaiNock);
 ```
@@ -132,9 +132,16 @@ it('requestedWithHeadersMatch', () => {
 * The default timeout is set to 2000ms 
 * You can set your own timeout per test on the nock like so:
 ```javascript
-  requestNock.timeout = 5000;
+  const { setTimeout } = require('chai-nock')
+  describe('setting a timeout', () => {
+    it('test', () => {
+      setTimeout(5000);
+
+      expect(...
+    })
+  })
+  
 ```
-* Or you can set a global timeout by exporting MAX_TIMEOUT as an environment variable
 
 ## Usage
 
