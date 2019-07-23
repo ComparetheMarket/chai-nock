@@ -2,7 +2,7 @@ const { expect, use } = require('chai');
 const nock = require('nock');
 const request = require('request-promise-native');
 
-const chaiNock = require('../');
+const { chaiNock } = require('../');
 
 use(chaiNock);
 
