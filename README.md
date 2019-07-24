@@ -153,3 +153,16 @@ describe('example', () => {
   });
 });
 ```
+
+## Options
+
+- **timeout**: Milliseconds until a request can be declared as not being called
+
+```javascript
+const chai = require('chai');
+const chaiNock = require('chai-nock');
+
+chai.use(chaiNock.withOptions({
+  timeout: 1000,
+}));
+```
