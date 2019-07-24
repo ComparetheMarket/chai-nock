@@ -128,6 +128,16 @@ it('requestedWithHeadersMatch', () => {
 });
 ```
 
+## Setting a Timeout
+* You can set a global timeout for nock assertions by calling `setTimeout` on the `chaiNock` object:
+```javascript
+const chaiNock = require('chai-nock');
+
+chai.use(chaiNock)
+// Set a timeout of 10 seconds
+chaiNock.setTimeout(10000)
+```
+
 ## Usage
 
 ```javascript
