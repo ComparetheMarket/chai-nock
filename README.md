@@ -138,6 +138,19 @@ chai.use(chaiNock);
 // Set a timeout of 10 seconds
 chaiNock.setTimeout(10000);
 ```
+* WARNING: If not set already, the test timeout must be greater than that of the chaiNock, e.g:
+```javascript
+chaiNock.setTimeout(10000);
+
+describe('example', () => {
+  it('test', () => {
+    // Test timeout
+    jest.setTimeout(12000);
+
+    expect...
+  });
+});
+```
 
 ## Usage
 
