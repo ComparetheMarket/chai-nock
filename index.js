@@ -2,9 +2,12 @@
 
 const equal = require('deep-equal');
 
-module.exports = chai => {
+const config = {
+  timeout: 2000,
+};
+
+const chaiNock = chai => {
   const { Assertion } = chai;
-  const MAX_TIMEOUT = 2000;
 
   function promisfyNockInterceptor(nock) {
     return new Promise((resolve, reject) => {
@@ -13,7 +16,7 @@ module.exports = chai => {
 
       const timeout = setTimeout(() => {
         reject(new Error('The request has not been recieved by Nock'));
-      }, MAX_TIMEOUT);
+      }, config.timeout);
 
       nock.once(
         'request',
@@ -154,4 +157,10 @@ module.exports = chai => {
         ),
     );
   });
+};
+
+module.exports = chaiNock;
+
+module.exports.setTimeout = timeout => {
+  config.timeout = timeout;
 };
