@@ -4,7 +4,11 @@ const request = require('request-promise-native');
 
 const chaiNock = require('../');
 
-use(chaiNock);
+use(
+  chaiNock.withOptions({
+    timeout: 200,
+  }),
+);
 
 describe('requested assertions', () => {
   const TEST_URL = 'http://someurl.com';
