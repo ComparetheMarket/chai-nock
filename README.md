@@ -134,9 +134,9 @@ it('requestedWithHeadersMatch', () => {
 ```javascript
 const chaiNock = require('chai-nock');
 
-chai.use(chaiNock)
+chai.use(chaiNock);
 // Set a timeout of 10 seconds
-chaiNock.setTimeout(10000)
+chaiNock.setTimeout(10000);
 ```
 
 ## Usage
