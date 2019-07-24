@@ -133,6 +133,7 @@ it('requestedWithHeadersMatch', () => {
 * You can set your own timeout per test on the nock like so:
 ```javascript
   const { setTimeout } = require('chai-nock')
+  
   describe('setting a timeout', () => {
     it('test', () => {
       setTimeout(5000);
@@ -140,7 +141,19 @@ it('requestedWithHeadersMatch', () => {
       expect(...
     })
   })
+```
+* Or for all tests in a file:
+```javascript
+  const { setTimeout } = require('chai-nock')
   
+  setTimeout(5000);
+  
+  describe('setting a timeout', () => {
+    it('test', () => {
+
+      expect(...
+    })
+  })
 ```
 
 ## Usage
