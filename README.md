@@ -129,7 +129,8 @@ it('requestedWithHeadersMatch', () => {
 ```
 
 ## Setting a Timeout
-* You can set a global timeout for nock assertions by calling `setTimeout` on the `chaiNock` object:
+* Be default a timeout of 2 seconds is applied to assertions on nock requests
+* You can set a custom global timeout by calling `setTimeout` on the `chaiNock` object:
 ```javascript
 const chaiNock = require('chai-nock');
 
